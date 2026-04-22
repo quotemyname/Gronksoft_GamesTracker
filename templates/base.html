@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Gronksoft GamesTracker{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <!-- Top nav bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="{{ url_for('battle_list') }}" class="header-logo" aria-label="Home">⚔️</a>
+      <h1 class="header-title">{% block header_title %}GamesTracker{% endblock %}</h1>
+    </div>
+    <nav class="header-nav">
+      <a href="{{ url_for('battle_list') }}" class="nav-link{% if request.endpoint == 'battle_list' %} active{% endif %}">Battles</a>
+      <a href="{{ url_for('statistics') }}" class="nav-link{% if request.endpoint == 'statistics' %} active{% endif %}">Stats</a>
+      <a href="{{ url_for('options') }}" class="nav-link{% if request.endpoint == 'options' %} active{% endif %}">Options</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+  </header>
+
+  <!-- Mobile slide-out menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="{{ url_for('battle_list') }}" class="mobile-link">🗡️ Battles</a>
+    <a href="{{ url_for('battle_add') }}" class="mobile-link">➕ Add Battle</a>
+    <a href="{{ url_for('statistics') }}" class="mobile-link">📊 Statistics</a>
+    <a href="{{ url_for('options') }}" class="mobile-link">⚙️ Options</a>
+  </div>
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Options – GamesTracker{% endblock %}
+{% block header_title %}Options{% endblock %}
+
+{% block content %}
+<section class="options-page">
+  <div class="options-list">
+    <a href="{{ url_for('export_csv') }}" class="option-item">
+      <span class="option-icon">📤</span>
+      <div class="option-text">
+        <span class="option-title">Export to CSV</span>
+        <span class="option-desc">Download all battles as a CSV file</span>
+      </div>
+    </a>
+
+    <a href="{{ url_for('battle_add') }}" class="option-item">
+      <span class="option-icon">➕</span>
+      <div class="option-text">
+        <span class="option-title">Add Battle</span>
+        <span class="option-desc">Record a new game result</span>
+      </div>
+    </a>
+
+    <a href="{{ url_for('statistics') }}" class="option-item">
+      <span class="option-icon">📊</span>
+      <div class="option-text">
+        <span class="option-title">Statistics</span>
+        <span class="option-desc">View win rates and army breakdowns</span>
+      </div>
+    </a>
+
+    <div class="option-item disabled">
+      <span class="option-icon">🔄</span>
+      <div class="option-text">
+        <span class="option-title">Import</span>
+        <span class="option-desc">Import battles from CSV (coming soon)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-section">
+    <h3>About</h3>
+    <p><strong>Gronksoft GamesTracker</strong></p>
+    <p>Spiritual successor to Iron Grudge.</p>
+    <p class="version">Version 0.1.0</p>
+  </div>
+</section>
+{% endblock %}

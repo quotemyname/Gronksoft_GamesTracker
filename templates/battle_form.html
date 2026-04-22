@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit Battle' if battle else 'Add Battle' }} – GamesTracker{% endblock %}
+{% block header_title %}{{ 'Edit Battle' if battle else 'Add Battle' }}{% endblock %}
+
+{% block content %}
+<form method="post" class="battle-form"
+      action="{{ url_for('battle_edit', battle_id=battle.id) if battle else url_for('battle_add') }}">
+
+  <!-- Section 1 – Core fields -->
+  <section class="form-section">
+    <h2 class="section-heading">Battle Info</h2>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" class="input"
+               value="{{ battle.date.isoformat() if battle and battle.date else '' }}">
+      </div>
+
+      <div class="field">
+        <label for="result">Result</label>
+        <select id="result" name="result" class="input">
+          {% for r in ['Win', 'Loss', 'Draw'] %}
+          <option value="{{ r }}" {% if battle and battle.result == r %}selected{% endif %}>{{ r }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="my_army">My Army</label>
+        <input type="text" id="my_army" name="my_army" class="input" placeholder="e.g. Space Marines"
+               value="{{ battle.my_army if battle else '' }}">
+      </div>
+
+      <div class="field">
+        <label for="opponent_army">Opponent Army</label>
+        <input type="text" id="opponent_army" name="opponent_army" class="input" placeholder="e.g. Orks"
+               value="{{ battle.opponent_army if battle else '' }}">
+      </div>
+
+      <div class="field">
+        <label for="scenario">Scenario</label>
+        <input type="text" id="scenario" name="scenario" class="input" placeholder="Scenario name"
+               value="{{ battle.scenario if battle else '' }}">
+      </div>
+
+      <div class="field">
+        <label for="army_size">Army Size</label>
+        <input type="number" id="army_size" name="army_size" class="input" min="0" placeholder="pts"
+               value="{{ battle.army_size if battle else '' }}">
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2 – Additional / Points -->
+  <section class="form-section">
+    <h2 class="section-heading collapsible" id="additionalToggle">
+      Additional
+      <span class="toggle-icon">▾</span>
+    </h2>
+
+    <div class="collapsible-body" id="additionalBody">
+      <div class="points-grid">
+        <div class="points-header"></div>
+        <div class="points-header">My Army</div>
+        <div class="points-header">Opponent</div>
+
+        <div class="points-label">Control Points</div>
+        <input type="number" name="my_control_points" class="input pts-input" min="0" placeholder="pts"
+               value="{{ battle.my_control_points if battle else '' }}">
+        <input type="number" name="opp_control_points" class="input pts-input" min="0" placeholder="pts"
+               value="{{ battle.opp_control_points if battle else '' }}">
+
+        <div class="points-label">Army Points</div>
+        <input type="number" name="my_army_points" class="input pts-input" min="0" placeholder="pts"
+               value="{{ battle.my_army_points if battle else '' }}">
+        <input type="number" name="opp_army_points" class="input pts-input" min="0" placeholder="pts"
+               value="{{ battle.opp_army_points if battle else '' }}">
+
+        <div class="points-label">Kill Points</div>
+        <input type="number" name="my_kill_points" class="input pts-input" min="0" placeholder="pts"
+               value="{{ battle.my_kill_points if battle else '' }}">
+        <input type="number" name="opp_kill_points" class="input pts-input" min="0" placeholder="pts"
+               value="{{ battle.opp_kill_points if battle else '' }}">
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="event">Event</label>
+          <input type="text" id="event" name="event" class="input" placeholder="Tournament / league name"
+                 value="{{ battle.event if battle else '' }}">
+        </div>
+
+        <div class="field">
+          <label for="initiative">Initiative</label>
+          <select id="initiative" name="initiative" class="input">
+            <option value="" {% if not battle or not battle.initiative %}selected{% endif %}>—</option>
+            <option value="First" {% if battle and battle.initiative == 'First' %}selected{% endif %}>First</option>
+            <option value="Second" {% if battle and battle.initiative == 'Second' %}selected{% endif %}>Second</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field field-full">
+        <label for="comment">Comment</label>
+        <textarea id="comment" name="comment" class="input textarea" rows="4"
+                  placeholder="-- this game is awesome --">{{ battle.comment if battle else '' }}</textarea>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-save">Save</button>
+    <a href="{{ url_for('battle_list') }}" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}

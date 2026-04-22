@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Battle Detail – GamesTracker{% endblock %}
+{% block header_title %}Battle Detail{% endblock %}
+
+{% block content %}
+<article class="battle-detail">
+  <!-- Result badge -->
+  <div class="detail-result result-{{ battle.result|lower }}">{{ battle.result }}</div>
+
+  <div class="detail-grid">
+    <!-- Armies -->
+    <div class="detail-matchup">
+      <div class="detail-army my-army">
+        <span class="label">My Army</span>
+        <span class="value">{{ battle.my_army or '—' }}</span>
+      </div>
+      <span class="detail-vs">vs</span>
+      <div class="detail-army opp-army">
+        <span class="label">Opponent</span>
+        <span class="value">{{ battle.opponent_army or '—' }}</span>
+      </div>
+    </div>
+
+    <!-- Info fields -->
+    <div class="detail-info">
+      <div class="info-item">
+        <span class="label">Date</span>
+        <span class="value">{{ battle.date.strftime('%B %d, %Y') if battle.date else '—' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Scenario</span>
+        <span class="value">{{ battle.scenario or '—' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Army Size</span>
+        <span class="value">{{ battle.army_size }} pts</span>
+      </div>
+      {% if battle.event %}
+      <div class="info-item">
+        <span class="label">Event</span>
+        <span class="value">{{ battle.event }}</span>
+      </div>
+      {% endif %}
+      {% if battle.initiative %}
+      <div class="info-item">
+        <span class="label">Initiative</span>
+        <span class="value">{{ battle.initiative }}</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Points table -->
+    {% if battle.my_control_points or battle.opp_control_points or battle.my_army_points or battle.opp_army_points or battle.my_kill_points or battle.opp_kill_points %}
+    <div class="detail-points">
+      <h3 class="section-heading">Points</h3>
+      <table class="points-table">
+        <thead>
+          <tr><th></th><th>My Army</th><th>Opponent</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="pt-label">Control</td>
+            <td>{{ battle.my_control_points }}</td>
+            <td>{{ battle.opp_control_points }}</td>
+          </tr>
+          <tr>
+            <td class="pt-label">Army</td>
+            <td>{{ battle.my_army_points }}</td>
+            <td>{{ battle.opp_army_points }}</td>
+          </tr>
+          <tr>
+            <td class="pt-label">Kill</td>
+            <td>{{ battle.my_kill_points }}</td>
+            <td>{{ battle.opp_kill_points }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <!-- Comment -->
+    {% if battle.comment %}
+    <div class="detail-comment">
+      <h3 class="section-heading">Comment</h3>
+      <p>{{ battle.comment }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Actions -->
+  <div class="detail-actions">
+    <a href="{{ url_for('battle_edit', battle_id=battle.id) }}" class="btn btn-accent">✏️ Edit</a>
+    <form method="post" action="{{ url_for('battle_delete', battle_id=battle.id) }}" class="inline-form"
+          onsubmit="return confirm('Delete this battle?')">
+      <button type="submit" class="btn btn-danger">🗑️ Delete</button>
+    </form>
+    <a href="{{ url_for('battle_list') }}" class="btn btn-secondary">← Back</a>
+  </div>
+</article>
+{% endblock %}

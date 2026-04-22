@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Statistics – GamesTracker{% endblock %}
+{% block header_title %}Statistics{% endblock %}
+
+{% block content %}
+<section class="stats-page">
+
+  <!-- Overall summary -->
+  <div class="stats-summary">
+    <div class="stat-card stat-total">
+      <span class="stat-number">{{ total }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-card stat-wins">
+      <span class="stat-number">{{ wins }}</span>
+      <span class="stat-label">Wins</span>
+    </div>
+    <div class="stat-card stat-losses">
+      <span class="stat-number">{{ losses }}</span>
+      <span class="stat-label">Losses</span>
+    </div>
+    <div class="stat-card stat-draws">
+      <span class="stat-number">{{ draws }}</span>
+      <span class="stat-label">Draws</span>
+    </div>
+  </div>
+
+  <!-- Win rate bar -->
+  <div class="win-rate-section">
+    <h3>Win Rate: {{ win_pct }}%</h3>
+    <div class="win-bar-container">
+      <div class="win-bar" style="width: {{ win_pct }}%"></div>
+    </div>
+  </div>
+
+  <!-- Points totals -->
+  {% if total > 0 %}
+  <div class="stats-points">
+    <h3 class="section-heading">Points Totals</h3>
+    <table class="points-table">
+      <thead>
+        <tr><th></th><th>My Army</th><th>Opponent</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="pt-label">Control</td>
+          <td>{{ total_my_cp }}</td>
+          <td>{{ total_opp_cp }}</td>
+        </tr>
+        <tr>
+          <td class="pt-label">Army</td>
+          <td>{{ total_my_ap }}</td>
+          <td>{{ total_opp_ap }}</td>
+        </tr>
+        <tr>
+          <td class="pt-label">Kill</td>
+          <td>{{ total_my_kp }}</td>
+          <td>{{ total_opp_kp }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Per-army breakdown -->
+  {% if army_stats %}
+  <div class="stats-armies">
+    <h3 class="section-heading">By Army</h3>
+    <div class="army-stats-grid">
+      {% for army_name, s in army_stats.items() %}
+      <div class="army-stat-card">
+        <h4>{{ army_name }}</h4>
+        <div class="army-stat-row">
+          <span class="mini-stat win-text">{{ s.wins }}W</span>
+          <span class="mini-stat loss-text">{{ s.losses }}L</span>
+          <span class="mini-stat draw-text">{{ s.draws }}D</span>
+          <span class="mini-stat">{{ s.win_pct }}%</span>
+        </div>
+        <div class="win-bar-container small">
+          <div class="win-bar" style="width: {{ s.win_pct }}%"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if total == 0 %}
+  <div class="empty-state">
+    <p>No battle data to show yet.</p>
+    <a href="{{ url_for('battle_add') }}" class="btn btn-accent">Add your first battle</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Battles – GamesTracker{% endblock %}
+{% block header_title %}Battles{% endblock %}
+
+{% block content %}
+<!-- Search / Filter bar -->
+<section class="filter-bar" id="filterBar">
+  <form method="get" action="{{ url_for('battle_list') }}" class="filter-form">
+    <div class="filter-row">
+      <div class="search-box">
+        <input type="text" name="q" placeholder="Search battles…" value="{{ filters.q }}" class="input">
+        <button type="submit" class="btn btn-sm btn-accent">🔍</button>
+      </div>
+      <button type="button" class="btn btn-sm btn-secondary" id="toggleFilters">Filters ▾</button>
+    </div>
+
+    <div class="filter-panel" id="filterPanel">
+      <div class="filter-grid">
+        <div class="field">
+          <label>Result</label>
+          <select name="result" class="input">
+            <option value="">All</option>
+            <option value="Win" {% if filters.result == 'Win' %}selected{% endif %}>Win</option>
+            <option value="Loss" {% if filters.result == 'Loss' %}selected{% endif %}>Loss</option>
+            <option value="Draw" {% if filters.result == 'Draw' %}selected{% endif %}>Draw</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>My Army</label>
+          <select name="army" class="input">
+            <option value="">All</option>
+            {% for a in all_armies %}
+            <option value="{{ a }}" {% if filters.army == a %}selected{% endif %}>{{ a }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Opponent</label>
+          <select name="opponent" class="input">
+            <option value="">All</option>
+            {% for o in all_opponents %}
+            <option value="{{ o }}" {% if filters.opponent == o %}selected{% endif %}>{{ o }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Scenario</label>
+          <select name="scenario" class="input">
+            <option value="">All</option>
+            {% for s in all_scenarios %}
+            <option value="{{ s }}" {% if filters.scenario == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Event</label>
+          <select name="event" class="input">
+            <option value="">All</option>
+            {% for e in all_events %}
+            <option value="{{ e }}" {% if filters.event == e %}selected{% endif %}>{{ e }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>From</label>
+          <input type="date" name="date_from" value="{{ filters.date_from }}" class="input">
+        </div>
+        <div class="field">
+          <label>To</label>
+          <input type="date" name="date_to" value="{{ filters.date_to }}" class="input">
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button type="submit" class="btn btn-accent">Apply</button>
+        <a href="{{ url_for('battle_list') }}" class="btn btn-secondary">Clear</a>
+      </div>
+    </div>
+  </form>
+</section>
+
+<!-- Battle list -->
+<section class="battle-list">
+  {% if battles %}
+  {% for battle in battles %}
+  <div class="battle-card" data-id="{{ battle.id }}"
+       oncontextmenu="showContextMenu(event, {{ battle.id }})">
+    <a href="{{ url_for('battle_detail', battle_id=battle.id) }}" class="battle-link">
+      <div class="battle-card-header">
+        <span class="battle-date">{{ battle.date.strftime('%Y-%m-%d') }}</span>
+        <span class="battle-result result-{{ battle.result|lower }}">{{ battle.result }}</span>
+      </div>
+      <div class="battle-card-body">
+        <span class="army-name my-army">{{ battle.my_army or '—' }}</span>
+        <span class="vs">vs</span>
+        <span class="army-name opp-army">{{ battle.opponent_army or '—' }}</span>
+      </div>
+      <div class="battle-card-footer">
+        {% if battle.scenario %}<span class="tag">{{ battle.scenario }}</span>{% endif %}
+        {% if battle.event %}<span class="tag tag-event">{{ battle.event }}</span>{% endif %}
+        {% if battle.army_size %}<span class="tag tag-size">{{ battle.army_size }} pts</span>{% endif %}
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="empty-state">
+    <p>No battles recorded yet.</p>
+    <a href="{{ url_for('battle_add') }}" class="btn btn-accent">Add your first battle</a>
+  </div>
+  {% endif %}
+</section>
+
+<!-- FAB – Add battle -->
+<a href="{{ url_for('battle_add') }}" class="fab" aria-label="Add battle">+</a>
+
+<!-- Context menu (long-press / right-click) -->
+<div class="context-menu" id="contextMenu">
+  <a id="ctxView" href="#" class="ctx-item">👁️ View</a>
+  <a id="ctxEdit" href="#" class="ctx-item">✏️ Edit</a>
+  <form id="ctxDeleteForm" method="post" class="ctx-item-form">
+    <button type="submit" class="ctx-item ctx-delete">🗑️ Delete</button>
+  </form>
+</div>
+{% endblock %}
