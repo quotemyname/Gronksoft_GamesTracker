@@ -345,4 +345,4 @@ def _update_battle_from_form(battle, form):
 
 if __name__ == "__main__":
     application = create_app()
-    application.run(debug=True)
+    application.run()

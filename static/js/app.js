@@ -99,17 +99,21 @@ function openContextMenu(x, y, battleId) {
   var contextMenu = document.getElementById("contextMenu");
   if (!contextMenu) return;
 
+  // Sanitize battleId to ensure it is a safe integer
+  var safeId = parseInt(battleId, 10);
+  if (isNaN(safeId) || safeId < 1) return;
+
   // Position
   contextMenu.style.left = x + "px";
   contextMenu.style.top = y + "px";
   contextMenu.classList.add("open");
 
-  // Wire links
+  // Wire links using sanitized id
   var ctxView = document.getElementById("ctxView");
   var ctxEdit = document.getElementById("ctxEdit");
   var ctxDeleteForm = document.getElementById("ctxDeleteForm");
 
-  if (ctxView) ctxView.href = "/battles/" + battleId;
-  if (ctxEdit) ctxEdit.href = "/battles/" + battleId + "/edit";
-  if (ctxDeleteForm) ctxDeleteForm.action = "/battles/" + battleId + "/delete";
+  if (ctxView) ctxView.href = "/battles/" + safeId;
+  if (ctxEdit) ctxEdit.href = "/battles/" + safeId + "/edit";
+  if (ctxDeleteForm) ctxDeleteForm.action = "/battles/" + safeId + "/delete";
 }

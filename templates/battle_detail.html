@@ -31,10 +31,12 @@
         <span class="label">Scenario</span>
         <span class="value">{{ battle.scenario or '—' }}</span>
       </div>
+      {% if battle.army_size %}
       <div class="info-item">
         <span class="label">Army Size</span>
         <span class="value">{{ battle.army_size }} pts</span>
       </div>
+      {% endif %}
       {% if battle.event %}
       <div class="info-item">
         <span class="label">Event</span>
