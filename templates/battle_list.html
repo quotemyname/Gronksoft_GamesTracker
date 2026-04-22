@@ -82,8 +82,7 @@
 <section class="battle-list">
   {% if battles %}
   {% for battle in battles %}
-  <div class="battle-card" data-id="{{ battle.id }}"
-       oncontextmenu="showContextMenu(event, {{ battle.id }})">
+  <div class="battle-card" data-id="{{ battle.id }}">
     <a href="{{ url_for('battle_detail', battle_id=battle.id) }}" class="battle-link">
       <div class="battle-card-header">
         <span class="battle-date">{{ battle.date.strftime('%Y-%m-%d') }}</span>

@@ -66,10 +66,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (contextMenu) contextMenu.classList.remove("open");
   });
 
-  // Attach long-press for touch devices
+  // Attach long-press for touch devices and right-click via event delegation
   document.querySelectorAll(".battle-card").forEach(function (card) {
+    var id = card.getAttribute("data-id");
+
+    card.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      openContextMenu(e.clientX, e.clientY, id);
+    });
+
     card.addEventListener("touchstart", function (e) {
-      var id = card.getAttribute("data-id");
       longPressTimer = setTimeout(function () {
         e.preventDefault();
         var touch = e.touches[0];
@@ -85,15 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
-/**
- * Show context menu at the given position for a battle.
- * Called from inline oncontextmenu handler on battle cards.
- */
-function showContextMenu(event, battleId) {
-  event.preventDefault();
-  openContextMenu(event.clientX, event.clientY, battleId);
-}
 
 function openContextMenu(x, y, battleId) {
   var contextMenu = document.getElementById("contextMenu");

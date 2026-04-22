@@ -5,6 +5,7 @@ Spiritual successor to Iron Grudge.
 
 import csv
 import io
+import os
 from datetime import date
 
 from flask import (
@@ -30,7 +31,7 @@ def create_app(testing: bool = False):
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///gamestracker.db"
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["SECRET_KEY"] = "gronksoft-dev-key"
+    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "gronksoft-dev-key")
 
     db.init_app(app)
 
